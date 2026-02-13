@@ -1,3 +1,7 @@
 venv/
 __pycache__/
 .gradio/
+/burmese_sentiment.tflite
+/keras_model_tflite_converter.py
+/model/test_.py
+/model/test_case.csv

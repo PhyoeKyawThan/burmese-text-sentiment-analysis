@@ -1,30 +1,11 @@
 import gradio as gr
 import numpy as np
-import pickle
-from tensorflow.keras.models import load_model
-from tensorflow.keras.preprocessing.sequence import pad_sequences
-from myTokenize import SyllableTokenizer
+from sentiment_engine import BurmeseSentiment
 
-model = load_model('trained_models/burmese_sentiment_lstm.keras')
-with open('tokenizer.pkl', 'rb') as f:
-    keras_tokenizer = pickle.load(f)
-with open('encoder.pkl', 'rb') as f:
-    encoder = pickle.load(f)
-
-syl_tokenizer = SyllableTokenizer()
+engine = BurmeseSentiment()
 
 def predict_emotion(text):
-    if not text or text.strip() == "":
-        return "Please enter some text."
-    
-    syllables = syl_tokenizer.tokenize(text)
-    seq = keras_tokenizer.texts_to_sequences([syllables])
-    padded = pad_sequences(seq, maxlen=100)
-    
-    pred = model.predict(padded, verbose=0)[0]
-    
-    results = {encoder.classes_[i]: float(pred[i]) for i in range(len(pred))}
-    return results
+    return engine.analyze(text)
 
 with gr.Blocks(theme=gr.themes.Soft()) as demo:
     gr.Markdown("# Burmese Emotion Tracker")
@@ -55,4 +36,4 @@ with gr.Blocks(theme=gr.themes.Soft()) as demo:
     submit_btn.click(fn=predict_emotion, inputs=input_text, outputs=output_label)
 
 if __name__ == "__main__":
-    demo.launch(share=True)
+    demo.launch(debug=True)

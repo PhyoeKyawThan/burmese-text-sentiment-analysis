@@ -11,7 +11,7 @@ from tensorflow.keras.layers import Embedding, LSTM, Dense, Dropout, SpatialDrop
 from myTokenize import SyllableTokenizer
 import os
 
-df = pd.read_csv('dataset.csv')
+df = pd.read_csv('datasets/dataset.csv')
 tokenizer = SyllableTokenizer()
 df['processed_text'] = df['Text-MM'].apply(tokenizer.tokenize)
 
@@ -36,8 +36,8 @@ df_balanced['label_id'] = encoder.fit_transform(df_balanced['Sentiment'])
 tokenizer = Tokenizer(num_words=5000, split=' ') 
 tokenizer.fit_on_texts(df_balanced['processed_text'].values)
 
-with open('tokenizer.pkl', 'wb') as f: pickle.dump(tokenizer, f)
-with open('encoder.pkl', 'wb') as f: pickle.dump(encoder, f)
+with open('trained_models/tokenizer.pkl', 'wb') as f: pickle.dump(tokenizer, f)
+with open('trained_models/encoder.pkl', 'wb') as f: pickle.dump(encoder, f)
 
 X = tokenizer.texts_to_sequences(df_balanced['processed_text'].values)
 X = pad_sequences(X, maxlen=100)
@@ -52,4 +52,4 @@ model = Sequential([
 
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 model.fit(X, Y, epochs=15, batch_size=32, validation_split=0.2)
-model.save('burmese_sentiment_lstm.keras')
+model.save('trained_models/burmese_sentiment_lstm.keras')
