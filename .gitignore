@@ -5,3 +5,6 @@ __pycache__/
 /keras_model_tflite_converter.py
 /model/test_.py
 /model/test_case.csv
+burmese-text-sentiment-analysis/
+*.keras
+test_hf_model.py
